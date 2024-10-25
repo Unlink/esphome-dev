@@ -3,6 +3,7 @@
 #include "esphome/core/component.h"
 #include "esphome/components/spi/spi.h"
 #include "esphome/components/display/display_buffer.h"
+#include "esphome/core/automation.h"
 
 namespace esphome {
 namespace waveshare_epaper {
@@ -38,6 +39,8 @@ class WaveshareEPaper : public display::DisplayBuffer,
 
   void fill(Color color) override;
 
+  Trigger<> *get_display_done_trigger() const { return this->display_done_trigger_; };
+
  protected:
   bool wait_until_idle_();
 
@@ -71,6 +74,8 @@ class WaveshareEPaper : public display::DisplayBuffer,
   GPIOPin *dc_pin_;
   GPIOPin *busy_pin_{nullptr};
   virtual uint32_t idle_timeout_() { return 1000u; }  // NOLINT(readability-identifier-naming)
+
+  Trigger<> *display_done_trigger_{new Trigger<>()};
 };
 
 class WaveshareEPaperBWR : public WaveshareEPaper {
@@ -854,6 +859,8 @@ class WaveshareEPaper7In5BV2 : public WaveshareEPaperPolled {
   void deep_sleep() override;
 
   std::vector<Color> get_supported_colors() override { return {display::COLOR_ON, Color(255, 0, 0, 0)}; }
+
+  
 
  protected:
   int get_width_internal() override { return 800; }

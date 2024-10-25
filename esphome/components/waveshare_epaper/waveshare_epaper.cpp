@@ -3079,6 +3079,7 @@ void WaveshareEPaperPolled::loop() {
       if (!this->busy_pin_ || !this->busy_pin_->digital_read()) {
         this->deep_sleep();
         this->set_state_(State::SLEEPING);
+        this->display_done_trigger_->trigger();
       }
       break;
   }

@@ -185,6 +185,7 @@ CONFIG_SCHEMA = cv.All(
                 cv.positive_time_period_milliseconds,
                 cv.Range(max=core.TimePeriod(milliseconds=500)),
             ),
+            cv.Optional(CONF_ON_DISPLAY_DONE): automation.validate_automation(single=True),
         }
     )
     .extend(cv.polling_component_schema("1s"))
@@ -217,6 +218,12 @@ async def to_code(config):
             config[CONF_LAMBDA], [(display.DisplayRef, "it")], return_type=cg.void
         )
         cg.add(var.set_writer(lambda_))
+    
+    if on_display_done_config := config.get(CONF_ON_DISPLAY_DONE):
+        await automation.build_automation(
+            var.get_display_done_trigger(), [], on_display_done_config
+        )
+
     if CONF_RESET_PIN in config:
         reset = await cg.gpio_pin_expression(config[CONF_RESET_PIN])
         cg.add(var.set_reset_pin(reset))
