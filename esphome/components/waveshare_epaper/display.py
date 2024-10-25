@@ -12,7 +12,6 @@ from esphome.const import (
     CONF_PAGES,
     CONF_RESET_DURATION,
     CONF_RESET_PIN,
-    CONF_ON_DISPLAY_DONE,
 )
 
 DEPENDENCIES = ["spi"]
@@ -186,7 +185,7 @@ CONFIG_SCHEMA = cv.All(
                 cv.positive_time_period_milliseconds,
                 cv.Range(max=core.TimePeriod(milliseconds=500)),
             ),
-            cv.Optional(CONF_ON_DISPLAY_DONE): automation.validate_automation(single=True),
+            cv.Optional("on_display_done"): automation.validate_automation(single=True),
         }
     )
     .extend(cv.polling_component_schema("1s"))
@@ -220,7 +219,7 @@ async def to_code(config):
         )
         cg.add(var.set_writer(lambda_))
     
-    if on_display_done_config := config.get(CONF_ON_DISPLAY_DONE):
+    if on_display_done_config := config.get(on_display_done):
         await automation.build_automation(
             var.get_display_done_trigger(), [], on_display_done_config
         )
