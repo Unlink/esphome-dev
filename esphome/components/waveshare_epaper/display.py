@@ -220,7 +220,7 @@ async def to_code(config):
         )
         cg.add(var.set_writer(lambda_))
     
-    if on_display_done_config := config.get(on_display_done):
+    if on_display_done_config := config.get("on_display_done"):
         await automation.build_automation(
             var.get_display_done_trigger(), [], on_display_done_config
         )
