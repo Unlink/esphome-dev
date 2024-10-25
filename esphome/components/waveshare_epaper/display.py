@@ -1,5 +1,6 @@
 import esphome.codegen as cg
 import esphome.config_validation as cv
+from esphome import automation
 from esphome import core, pins
 from esphome.components import display, spi
 from esphome.const import (
